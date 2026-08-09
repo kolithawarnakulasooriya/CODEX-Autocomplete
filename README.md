@@ -1,6 +1,6 @@
 # autocomplete-codex
 
-`autocomplete-codex` is a complete VS Code extension that generates inline code suggestions as ghost text. It signs in with your ChatGPT account through the Codex OAuth PKCE flow by default, with OpenAI API-key authentication available as a fallback. It is inspired by the MIT-licensed [`kevchan9922/codex_autocomplete`](https://github.com/kevchan9922/codex_autocomplete) project and uses an independent command/configuration namespace.
+`autocomplete-codex` is a complete VS Code extension that generates inline code suggestions as ghost text. It signs in with your ChatGPT account through the Codex OAuth PKCE flow by default, with OpenAI API-key authentication available as a fallback.
 
 This is a community extension, not an official OpenAI product.
 
