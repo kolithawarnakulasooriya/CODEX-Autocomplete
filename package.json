@@ -1,0 +1,225 @@
+{
+  "name": "autocomplete-codex",
+  "displayName": "Autocomplete Codex",
+  "description": "Codex-powered inline ghost-text autocomplete for VS Code with ChatGPT OAuth sign-in.",
+  "version": "1.2.0",
+  "publisher": "local-development",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kolithawarnakulasooriya/CODEX-Autocomplete.git"
+  },
+  "homepage": "https://github.com/kolithawarnakulasooriya/CODEX-Autocomplete#readme",
+  "bugs": {
+    "url": "https://github.com/kolithawarnakulasooriya/CODEX-Autocomplete/issues"
+  },
+  "engines": {
+    "vscode": "^1.95.0"
+  },
+  "categories": [
+    "Programming Languages",
+    "Machine Learning"
+  ],
+  "keywords": [
+    "autocomplete",
+    "codex",
+    "ghost-text",
+    "inline-completion",
+    "openai"
+  ],
+  "activationEvents": [
+    "onStartupFinished",
+    "onCommand:autocompleteCodex.login",
+    "onCommand:autocompleteCodex.logout",
+    "onCommand:autocompleteCodex.authStatus",
+    "onCommand:autocompleteCodex.setApiKey",
+    "onCommand:autocompleteCodex.clearApiKey",
+    "onCommand:autocompleteCodex.trigger",
+    "onCommand:autocompleteCodex.enableAutomatic",
+    "onCommand:autocompleteCodex.toggle",
+    "onCommand:autocompleteCodex.showOutput"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "autocompleteCodex.login",
+        "title": "Autocomplete Codex: Sign in with ChatGPT"
+      },
+      {
+        "command": "autocompleteCodex.logout",
+        "title": "Autocomplete Codex: Sign out of ChatGPT"
+      },
+      {
+        "command": "autocompleteCodex.authStatus",
+        "title": "Autocomplete Codex: Show Authentication Status"
+      },
+      {
+        "command": "autocompleteCodex.setApiKey",
+        "title": "Autocomplete Codex: Set OpenAI API Key"
+      },
+      {
+        "command": "autocompleteCodex.clearApiKey",
+        "title": "Autocomplete Codex: Clear OpenAI API Key"
+      },
+      {
+        "command": "autocompleteCodex.trigger",
+        "title": "Autocomplete Codex: Trigger Inline Completion"
+      },
+      {
+        "command": "autocompleteCodex.enableAutomatic",
+        "title": "Autocomplete Codex: Enable Automatic Ghost Text"
+      },
+      {
+        "command": "autocompleteCodex.toggle",
+        "title": "Autocomplete Codex: Toggle Autocomplete"
+      },
+      {
+        "command": "autocompleteCodex.showOutput",
+        "title": "Autocomplete Codex: Show Output"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "autocompleteCodex.trigger",
+        "key": "ctrl+alt+space",
+        "mac": "ctrl+alt+space",
+        "when": "editorTextFocus"
+      }
+    ],
+    "configuration": {
+      "title": "Autocomplete Codex",
+      "properties": {
+        "autocompleteCodex.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable Codex inline completions."
+        },
+        "autocompleteCodex.triggerMode": {
+          "type": "string",
+          "enum": ["manual", "automatic"],
+          "default": "automatic",
+          "description": "Automatically show ghost text while typing, or require the manual command/shortcut."
+        },
+        "autocompleteCodex.authenticationMode": {
+          "type": "string",
+          "enum": ["oauth", "apiKey", "auto"],
+          "default": "oauth",
+          "enumDescriptions": [
+            "Use ChatGPT OAuth only.",
+            "Use the stored OpenAI API key only.",
+            "Prefer OAuth and fall back to the stored API key."
+          ],
+          "description": "Authentication used for completion requests."
+        },
+        "autocompleteCodex.model": {
+          "type": "string",
+          "default": "gpt-5.6-luna",
+          "description": "OpenAI Responses API model used for inline completion."
+        },
+        "autocompleteCodex.oauthModel": {
+          "type": "string",
+          "default": "gpt-5.4",
+          "description": "Model used with the ChatGPT Codex OAuth backend."
+        },
+        "autocompleteCodex.endpoint": {
+          "type": "string",
+          "default": "https://api.openai.com/v1/responses",
+          "description": "Responses-compatible HTTPS endpoint used in API-key mode. OAuth uses the Codex backend."
+        },
+        "autocompleteCodex.debounceMs": {
+          "type": "number",
+          "default": 180,
+          "minimum": 0,
+          "maximum": 5000,
+          "description": "Delay before automatic completion requests."
+        },
+        "autocompleteCodex.timeoutMs": {
+          "type": "number",
+          "default": 5000,
+          "minimum": 250,
+          "maximum": 30000,
+          "description": "Maximum request time."
+        },
+        "autocompleteCodex.maxOutputTokens": {
+          "type": "number",
+          "default": 128,
+          "minimum": 1,
+          "maximum": 1024,
+          "description": "Maximum number of generated tokens per suggestion."
+        },
+        "autocompleteCodex.maxSuggestionLines": {
+          "type": "number",
+          "default": 3,
+          "minimum": 1,
+          "maximum": 20,
+          "description": "Maximum lines retained in a completion."
+        },
+        "autocompleteCodex.contextBeforeLines": {
+          "type": "number",
+          "default": 80,
+          "minimum": 1,
+          "maximum": 500,
+          "description": "Maximum context lines before the cursor."
+        },
+        "autocompleteCodex.contextAfterLines": {
+          "type": "number",
+          "default": 20,
+          "minimum": 0,
+          "maximum": 200,
+          "description": "Maximum context lines after the cursor."
+        },
+        "autocompleteCodex.maxContextCharacters": {
+          "type": "number",
+          "default": 24000,
+          "minimum": 1000,
+          "maximum": 200000,
+          "description": "Maximum source characters sent in a completion request."
+        },
+        "autocompleteCodex.requestsPerMinute": {
+          "type": "number",
+          "default": 30,
+          "minimum": 1,
+          "maximum": 600,
+          "description": "Client-side request limit per rolling minute."
+        },
+        "autocompleteCodex.cacheTtlMs": {
+          "type": "number",
+          "default": 30000,
+          "minimum": 0,
+          "maximum": 600000,
+          "description": "How long identical suggestions are cached locally."
+        },
+        "autocompleteCodex.reasoningEffort": {
+          "type": "string",
+          "enum": ["none", "low"],
+          "default": "none",
+          "description": "Reasoning effort. None is recommended for low-latency completion."
+        },
+        "autocompleteCodex.disabledLanguages": {
+          "type": "array",
+          "items": { "type": "string" },
+          "default": [],
+          "description": "VS Code language IDs where completion is disabled."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "clean": "node -e \"require('fs').rmSync('out',{recursive:true,force:true})\"",
+    "compile": "tsc -p .",
+    "watch": "tsc -p . --watch",
+    "test:unit": "npm run compile && node --test test/*.test.js",
+    "test:integration": "npm run compile && node out/test/runTest.js",
+    "test": "npm run test:unit",
+    "check": "npm run clean && npm run compile && npm run test:unit",
+    "package:vsix": "npm run check && vsce package --allow-missing-repository"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.0",
+    "@types/vscode": "^1.95.0",
+    "@vscode/test-electron": "^3.1.0",
+    "@vscode/vsce": "^3.9.2",
+    "typescript": "^5.9.3"
+  }
+}
