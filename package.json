@@ -3,7 +3,7 @@
   "displayName": "Autocomplete Codex",
   "description": "Codex-powered inline ghost-text autocomplete for VS Code with ChatGPT OAuth sign-in.",
   "version": "1.3.3",
-  "publisher": "MARKETPLACE_ID",
+  "publisher": "Kolitha",
   "icon": "autocomplete-codex-thumbnail.png",
   "license": "MIT",
   "repository": {
