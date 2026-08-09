@@ -20,53 +20,6 @@ This is a community extension, not an official OpenAI product.
 
 OAuth mode uses `gpt-5.4` by default through the Codex backend. API-key mode uses `gpt-5.6-luna` by default through the public Responses API. Both model settings are configurable.
 
-## Local setup
-
-Requirements: Node.js 20 or newer, npm, and VS Code 1.95 or newer.
-
-```bash
-npm install
-npm run compile
-npm test
-```
-
-Then open this folder in VS Code and press `F5`. A new **Extension Development Host** opens with the extension loaded.
-
-In that development window:
-
-1. Open the Command Palette.
-2. Run **Autocomplete Codex: Sign in with ChatGPT**.
-3. Complete the browser sign-in. The browser returns to the extension through a temporary localhost callback.
-4. Open [`examples/demo.ts`](examples/demo.ts).
-5. Put the cursor after `result.`.
-6. Press `Ctrl+Alt+Space`.
-7. Press `Tab` to accept the ghost-text suggestion.
-
-To use an API key instead, run **Autocomplete Codex: Set OpenAI API Key**; that command switches `autocompleteCodex.authenticationMode` to `apiKey`. API usage may incur charges on your OpenAI API account.
-
-## Test commands
-
-```bash
-# Type-check and run fast unit tests (no real API call)
-npm test
-
-# Launch VS Code and run the activation/command smoke test
-npm run test:integration
-
-# Clean compile plus unit gate
-npm run check
-
-# Build an installable autocomplete-codex-1.2.0.vsix
-npm run package:vsix
-```
-
-The integration test downloads a matching VS Code test runtime on its first run. Unit tests mock OAuth and completion traffic and never read real credentials.
-
-Install the packaged extension locally with:
-
-```bash
-code --install-extension autocomplete-codex-1.2.0.vsix --force
-```
 
 ## Commands
 
@@ -87,8 +40,6 @@ code --install-extension autocomplete-codex-1.2.0.vsix --force
 All settings start with `autocompleteCodex.`. `triggerMode` defaults to `automatic`, and suggestions appear after the configured `debounceMs` pause while typing. `authenticationMode` defaults to `oauth`; `auto` prefers OAuth and falls back to an API key. `oauthModel` controls the Codex backend model, while `model` and `endpoint` apply to API-key mode.
 
 If automatic suggestions do not appear, run **Autocomplete Codex: Enable Automatic Ghost Text**. This sets `autocompleteCodex.triggerMode` to `automatic` and enables VS Code's `editor.inlineSuggest.enabled` setting.
-
-For implementation details, see [ARCHITECTURE.md](ARCHITECTURE.md). For a shorter contributor workflow, see [DEVELOPMENT.md](DEVELOPMENT.md).
 
 ## Security and privacy
 
