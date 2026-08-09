@@ -19,6 +19,8 @@ jobs:
     name: Validate and publish extension
     runs-on: ubuntu-latest
     timeout-minutes: 15
+    env:
+      MARKETPLACE_ID: ${{ secrets.MARKETPLACE_ID }}
 
     steps:
       - name: Check out repository
@@ -33,14 +35,21 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Validate publisher and release tag
+      - name: Configure publisher and validate release tag
         shell: bash
         run: |
+          if [[ -z "$MARKETPLACE_ID" ]]; then
+            echo "::error::The MARKETPLACE_ID repository secret is required. Set it to your Visual Studio Marketplace publisher ID."
+            exit 1
+          fi
+
+          npm pkg set publisher="$MARKETPLACE_ID"
+
           publisher="$(node -p "require('./package.json').publisher")"
           version="$(node -p "require('./package.json').version")"
 
-          if [[ "$publisher" == "local-development" ]]; then
-            echo "::error file=package.json::Replace the placeholder publisher with your Visual Studio Marketplace publisher ID."
+          if [[ "$publisher" != "$MARKETPLACE_ID" ]]; then
+            echo "::error file=package.json::Failed to configure the Marketplace publisher ID."
             exit 1
           fi
 
