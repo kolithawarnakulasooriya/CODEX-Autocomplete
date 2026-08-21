@@ -93,17 +93,20 @@
       "properties": {
         "autocompleteCodex.enabled": {
           "type": "boolean",
+          "scope": "application",
           "default": true,
           "description": "Enable Codex inline completions."
         },
         "autocompleteCodex.triggerMode": {
           "type": "string",
+          "scope": "application",
           "enum": ["manual", "automatic"],
           "default": "automatic",
           "description": "Automatically show ghost text while typing, or require the manual command/shortcut."
         },
         "autocompleteCodex.authenticationMode": {
           "type": "string",
+          "scope": "application",
           "enum": ["oauth", "apiKey", "auto"],
           "default": "oauth",
           "enumDescriptions": [
@@ -125,6 +128,7 @@
         },
         "autocompleteCodex.endpoint": {
           "type": "string",
+          "scope": "application",
           "default": "https://api.openai.com/v1/responses",
           "description": "Responses-compatible HTTPS endpoint used in API-key mode. OAuth uses the Codex backend."
         },
