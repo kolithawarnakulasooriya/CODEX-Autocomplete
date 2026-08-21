@@ -54,3 +54,12 @@ If automatic suggestions do not appear, run **Autocomplete Codex: Enable Automat
 The ChatGPT OAuth client and Codex backend route mirror OpenAI's Codex tooling and the analyzed reference extension. They are not documented as a general-purpose third-party OAuth API and may require maintenance if OpenAI changes that contract.
 
 The streaming implementation follows the official [OpenAI streaming Responses guide](https://developers.openai.com/api/docs/guides/streaming-responses).
+
+# Version Updates
+
+| Version | Updates |
+| --- | --- |
+| 1.0.0 | Initial Developments |
+| 1.2.0 | Implemented Code API Key authentication |
+| 1.3.0 | Implemented the Chat GPT Authentication |
+| 1.4.0 | Full Security test and update |
