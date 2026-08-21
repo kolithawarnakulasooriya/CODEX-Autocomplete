@@ -104,3 +104,38 @@ test('OAuth requests omit API-only token limits and forward the account id', asy
   assert.equal(captured.headers.Authorization, 'Bearer oauth-token');
   assert.equal(captured.headers['ChatGPT-Account-Id'], 'account-123');
 });
+
+test('rejects an oversized streaming output', async () => {
+  const delta = 'x'.repeat(70 * 1024);
+  const fetcher = async () => new Response(
+    `data: ${JSON.stringify({ type: 'response.output_text.delta', delta })}\n\n`,
+  );
+  const client = new OpenAIResponsesClient({
+    endpoint: 'https://example.test', accessToken: 'key', fetcher,
+  });
+  await assert.rejects(
+    () => client.complete(request, new AbortController().signal),
+    /output limit/,
+  );
+});
+
+test('reads only a bounded prefix of an error response', async () => {
+  let cancelled = false;
+  const stream = new ReadableStream({
+    pull(controller) {
+      controller.enqueue(new TextEncoder().encode('x'.repeat(8192)));
+    },
+    cancel() {
+      cancelled = true;
+    },
+  });
+  const fetcher = async () => new Response(stream, { status: 400 });
+  const client = new OpenAIResponsesClient({
+    endpoint: 'https://example.test', accessToken: 'key', fetcher,
+  });
+  await assert.rejects(
+    () => client.complete(request, new AbortController().signal),
+    /OpenAI request failed \(400\): x{500}$/,
+  );
+  assert.equal(cancelled, true);
+});

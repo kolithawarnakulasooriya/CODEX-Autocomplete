@@ -25,3 +25,8 @@ test('throws stream errors with provider message', () => {
     /bad request/,
   );
 });
+
+test('rejects an SSE event that exceeds the parser buffer limit', () => {
+  const parser = new SseParser(16);
+  assert.throws(() => parser.push('data: 12345678901'), /size limit/);
+});
