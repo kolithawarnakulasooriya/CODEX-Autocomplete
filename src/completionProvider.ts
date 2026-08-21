@@ -81,10 +81,23 @@ export class AutocompleteCodexProvider
         await abortableDelay(settings.debounceMs, controller.signal);
       }
 
+      if (!this.limiter.tryAcquire()) {
+        this.log(`Client rate limit reached (${settings.requestsPerMinute} requests/minute).`);
+        return [];
+      }
+
+      const cursorOffset = document.offsetAt(position);
+      const prefixBudget = Math.floor(settings.maxContextCharacters * 0.7);
+      const suffixBudget = settings.maxContextCharacters - prefixBudget;
+      const prefixStart = document.positionAt(Math.max(0, cursorOffset - prefixBudget));
+      const documentEndOffset = document.offsetAt(new vscode.Position(document.lineCount, 0));
+      const suffixEnd = document.positionAt(Math.min(documentEndOffset, cursorOffset + suffixBudget));
+      const boundedPrefix = document.getText(new vscode.Range(prefixStart, position));
+      const boundedSuffix = document.getText(new vscode.Range(position, suffixEnd));
       const context = buildCompletionContext(
         {
-          text: document.getText(),
-          offset: document.offsetAt(position),
+          text: boundedPrefix + boundedSuffix,
+          offset: boundedPrefix.length,
           languageId: document.languageId,
           filePath: document.uri.fsPath || document.uri.toString(),
         },
@@ -94,6 +107,8 @@ export class AutocompleteCodexProvider
           maxCharacters: settings.maxContextCharacters,
         },
       );
+      context.line = position.line;
+      context.character = position.character;
       const credential = await this.tokenManager.getCredential(
         settings.authenticationMode,
         settings.endpoint,
@@ -104,11 +119,6 @@ export class AutocompleteCodexProvider
       if (cached !== undefined) {
         this.log('Cache hit.');
         return this.toItems(cached, position);
-      }
-
-      if (!this.limiter.tryAcquire()) {
-        this.log(`Client rate limit reached (${settings.requestsPerMinute} requests/minute).`);
-        return [];
       }
 
       const startedAt = Date.now();

@@ -104,25 +104,25 @@ export async function startOAuthCallbackServer(
         const error = requestUrl.searchParams.get('error');
         const code = requestUrl.searchParams.get('code');
         const state = requestUrl.searchParams.get('state');
-        const stateMismatch = Boolean(options.expectedState && state !== options.expectedState);
-        if (error || !code || !state || stateMismatch) {
+        const stateMatches = Boolean(state && (!options.expectedState || state === options.expectedState));
+        if (!stateMatches || (!code && !error)) {
           response.writeHead(400, { 'Content-Type': 'text/html; charset=utf-8' });
-          const message = error
-            ?? (stateMismatch ? 'OAuth state validation failed.' : 'The callback did not contain code and state.');
-          response.end(callbackHtml(false, message));
+          response.end(callbackHtml(false, 'The OAuth callback was invalid. Waiting for sign-in to complete.'));
+          return;
+        }
+
+        if (error) {
+          response.writeHead(400, { 'Content-Type': 'text/html; charset=utf-8' });
+          response.end(callbackHtml(false, 'The OAuth provider declined the sign-in request.'));
           cleanup();
-          reject(new Error(error
-            ? `OAuth authorization failed: ${error}`
-            : stateMismatch
-              ? 'OAuth state validation failed.'
-              : 'OAuth callback is incomplete.'));
+          reject(new Error('OAuth authorization failed.'));
           return;
         }
 
         response.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
         response.end(callbackHtml(true, 'Autocomplete Codex is signed in.'));
         cleanup();
-        resolve({ code, state });
+        resolve({ code: code!, state: state! });
       });
       server.once('error', (error) => {
         cleanup();

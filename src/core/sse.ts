@@ -8,8 +8,13 @@ export interface ResponseStreamEvent {
 export class SseParser {
   private buffer = '';
 
+  constructor(private readonly maxBufferCharacters = 256 * 1024) {}
+
   push(chunk: string): string[] {
     this.buffer += chunk.replace(/\r\n/g, '\n');
+    if (this.buffer.length > this.maxBufferCharacters) {
+      throw new Error('OpenAI stream event exceeded the client size limit.');
+    }
     const payloads: string[] = [];
     let boundary = this.buffer.indexOf('\n\n');
 
