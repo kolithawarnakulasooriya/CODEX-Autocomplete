@@ -1,6 +1,6 @@
 <div align="center">
 
-# Raven OS
+# Codex AutoComplete VSCode Plugin
 
 <img align="center" src="autocomplete-codex-thumbnail.png" width="200"/>
 
