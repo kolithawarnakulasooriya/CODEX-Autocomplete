@@ -1,4 +1,13 @@
-# autocomplete-codex
+<div align="center">
+
+# Raven OS
+
+<img align="center" src="autocomplete-codex-thumbnail.png" width="200"/>
+
+</div>
+
+![Visual Studio Code](https://img.shields.io/badge/Visual%20Studio%20Code-007ACC?logo=visualstudiocode&logoColor=fff&style=plastic)
+
 
 `autocomplete-codex` is a complete VS Code extension that generates inline code suggestions as ghost text. It signs in with your ChatGPT account through the Codex OAuth PKCE flow by default, with OpenAI API-key authentication available as a fallback.
 
