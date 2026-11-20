@@ -18,7 +18,7 @@ This is a community extension, not an official OpenAI product.
 - Language allow/deny controls, a status-bar toggle, and an output channel
 - Unit tests and a VS Code Extension Host integration smoke test
 
-OAuth mode uses `gpt-5.4` by default through the Codex backend. API-key mode uses `gpt-5.6-luna` by default through the public Responses API. Both model settings are configurable.
+OAuth mode uses `gpt-6.2-sol` by default through the Codex backend. API-key mode uses `gpt-6.2-sol` by default through the public Responses API. Both model settings are configurable.
 
 
 ## Commands
