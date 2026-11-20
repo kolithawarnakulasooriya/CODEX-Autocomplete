@@ -19,14 +19,14 @@ const request = {
     prefix: 'const x = ',
     suffix: ';',
   },
-  model: 'gpt-5.6-luna',
+  model: 'gpt-6.2-sol',
   maxOutputTokens: 64,
   reasoningEffort: 'none',
 };
 
 test('builds a Responses API body for non-persisted streaming', () => {
   const body = buildResponsesRequestBody(request);
-  assert.equal(body.model, 'gpt-5.6-luna');
+  assert.equal(body.model, 'gpt-6.2-sol');
   assert.equal(body.stream, true);
   assert.equal(body.store, false);
   assert.equal(body.max_output_tokens, 64);
